@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<Test>
+
+	<TestSuite id="TestGoogleSuite" useRC="false" >
+		
+		<Parameter id="lst-ib" value="John" />
+		<Parameter id="seleniumType" value="webdriver" />
+
+		<TestCase id="testGoogle">
+		</TestCase>
+
+	</TestSuite>
+
+	<!-- <TestSuite id="TestPreProcessSuite1" useRC="false" >
+		<Parameter id="ItemID" autogenerate="true"/>
+		<Parameter id="username" value="CL6001A" />
+		<Parameter id="password" value="welcome" />
+		<Parameter id="seleniumType" value="webdriver" />
+
+		<TestCase id="TestCaseBCRDriver">
+			<Parameter id="ItemID" value="201304090000025" />
+		</TestCase>
+
+	</TestSuite>
+
+	 <TestSuite id="TestPreProcessSuite2" useRC="true" >
+		<Parameter id="ItemID" autogenerate="true"/>
+		<Parameter id="username" value="CL6001A" />
+		<Parameter id="password" value="welcome" />
+		<Parameter id="seleniumType" value="webdriver" />
+
+
+		<TestCase id="TestCaseBCR">
+			<Parameter id="ItemID" value="201304030000040" />
+		</TestCase>
+
+	</TestSuite>   -->
+
+
+</Test>
