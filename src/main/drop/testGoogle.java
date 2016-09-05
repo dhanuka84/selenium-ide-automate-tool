@@ -28,6 +28,7 @@ public class Google {
     driver.get(baseUrl + "/?gfe_rd=cr&ei=2Yi6V4bMI43M8geVsKfYDg");
     driver.findElement(By.id("lst-ib")).clear();
     driver.findElement(By.id("lst-ib")).sendKeys("dhanuka");
+    Thread.sleep(1000);
     driver.findElement(By.name("btnG")).click();
   }
 

@@ -82,9 +82,10 @@ public class TestGoogleSuite implements Serializable{
  @Test
   public void testGoogle() throws Exception {
     driver.get(baseUrl + "/?gfe_rd=cr&ei=2Yi6V4bMI43M8geVsKfYDg");
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys("dhanuka");
-    driver.findElement(By.name("btnG")).click();
+    describer.findElementExplicitWait( driver , By.id("lst-ib")).clear();
+    describer.findElementExplicitWait( driver , By.id("lst-ib")).sendKeys("dhanuka");
+    Thread.sleep(1000);
+    describer.findElementExplicitWait( driver , By.name("btnG")).click();
   }
 
   

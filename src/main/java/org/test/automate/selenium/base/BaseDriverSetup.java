@@ -30,12 +30,6 @@ import org.test.automate.selenium.Constants;
 
 import com.thoughtworks.selenium.Selenium;
 
-/**
- 
- *
- * Author: Dhanuka Ranasinghe
- * Created: April 02, 2013, 2:24:48 PM
- */
 public class BaseDriverSetup {
 	
 	private static Properties domainConfig = new Properties();

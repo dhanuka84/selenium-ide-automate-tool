@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.By;
+
 public class CustomMethodEditor {
 
 	
@@ -39,8 +41,13 @@ public class CustomMethodEditor {
     }
     
     
-    private static Pattern findElementPattern = Pattern.compile("driver.findElement\\(By.xpath\\(\"//\\w+.+\"\\)\\)");
+    private static Pattern findByXpathPattern = Pattern.compile("driver.findElement\\(By.xpath\\(\"//\\w+.+\"\\)\\)");
+    private static Pattern findByIdPattern = Pattern.compile("driver.findElement\\(By.id\\(\"\\w+.+\"\\)\\)");
+    private static Pattern findByNamePattern = Pattern.compile("driver.findElement\\(By.name\\(\"\\w+.+\"\\)\\)");
+    //private static Pattern findElementPattern = Pattern.compile("driver.findElement\\(*.\\)");
     private static Pattern ByXpathPattern = Pattern.compile("By.xpath\\(\"//\\w+.+\"\\)");
+    private static Pattern ByIdPattern = Pattern.compile("By.id\\(\"\\w+.+\"\\)");
+    private static Pattern ByNamePattern = Pattern.compile("By.name\\(\"\\w+.+\"\\)");
     private static Pattern threadSleepPattern = Pattern.compile("Thread.sleep\\([0-9]+\\);");
     private static Pattern threadErrorPattern = Pattern.compile("//.*ERROR.*\\[Thread.sleep\\([0-9]+\\);\\]\\]");
   //.*ERROR.*\[Thread.sleep\([0-9]+\);\]]
@@ -49,21 +56,33 @@ public class CustomMethodEditor {
     public static final String FIND_ELEMENT_CUSTOM_METHOD = "describer.findElementExplicitWait(";
     
     public String replaceFindMethod(final String testClass){
-		
-		Matcher elementMatcher = findElementPattern.matcher(testClass);
-        StringBuffer sb = new StringBuffer();
-        while (elementMatcher.find()) {
-        	String expression = elementMatcher.toMatchResult().group();
-        	elementMatcher.appendReplacement(sb, changeFindMethodInput(expression));
-        }
-        
-        String editedClass = elementMatcher.appendTail(sb).toString();
-		return applyThreadSleepError(editedClass);
+		    	
+    	String finalEdited = testClass;
+    	finalEdited = replaceFindMethod(findByXpathPattern.matcher(testClass),ByXpathPattern);
+    	finalEdited = replaceFindMethod(findByIdPattern.matcher(finalEdited),ByIdPattern);
+    	finalEdited = replaceFindMethod(findByNamePattern.matcher(finalEdited),ByNamePattern);
+    	
+    	
+    	
+    	
+    	return finalEdited;
 	}
     
-    private String changeFindMethodInput(final String expression){
+    private String replaceFindMethod(Matcher firstLevel, Pattern secondLevelPattern){
+    	
+        StringBuffer sb = new StringBuffer();
+        while (firstLevel.find()) {
+        	String expression = firstLevel.toMatchResult().group();
+        	firstLevel.appendReplacement(sb, changeFindMethodInput(secondLevelPattern.matcher(expression)));
+        }
+        
+        String editedClass = firstLevel.appendTail(sb).toString();
+		return applyThreadSleepError(editedClass);
+    	
+    }
+    
+    private String changeFindMethodInput(Matcher elementMatcher){
     	    	
-    	Matcher elementMatcher = ByXpathPattern.matcher(expression);
         StringBuffer sb = new StringBuffer();
         while (elementMatcher.find()) {
         	String argument = elementMatcher.toMatchResult().group();
