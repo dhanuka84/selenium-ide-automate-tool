@@ -85,7 +85,7 @@ public class BaseDriverSetup {
 		
 		BrowserSelector selector = BrowserSelector.getInstance();
 
-		String baseUrl = domainConfig.getProperty(Constants.HOST_CONFIG);
+		String baseUrl = domainConfig.getProperty(Constants.BASE_URL);
 		String hubUrl = domainConfig.getProperty(Constants.HUB_URL);
 		boolean enableNative = Boolean.parseBoolean(domainConfig.getProperty(Constants.NATIVE_ENABLE));
 		

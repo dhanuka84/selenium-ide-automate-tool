@@ -51,13 +51,13 @@ public class JUnitSeleniumBase implements Serializable{
 		
 		System.out.println(" tear Down ");
 
-		Thread.sleep(2000);
+		/*Thread.sleep(2000);
 		
 		if(useRC){
 			selenium.click("//img[@alt='Logout']");
 		}else{
 			driver.findElement(By.xpath("//img[@alt='Logout']")).click();
-		}
+		}*/
 		
 		
 		Thread.currentThread().sleep(2000);

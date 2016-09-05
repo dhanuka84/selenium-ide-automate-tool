@@ -25,7 +25,7 @@ public class Constants {
 	public static final String 	TEST_SOURCE_LOCATION = "src/test/java/";
 	public static final String DOMAIN_CONFIG_FILE = "domain.properties";
 	public static final String BROWSER_CONFIG_FILE = "browser.properties";
-	public static final String HOST_CONFIG = "jboss.host";
+	public static final String BASE_URL = "base.url";
 	public static final String DRIVER_MODE = "driver.mode";
 	public static final String HUB_URL = "hub.url";
 	public static final String NATIVE_ENABLE = "enable.native.events";
