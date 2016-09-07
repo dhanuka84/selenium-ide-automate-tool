@@ -161,7 +161,8 @@ public class CustomMethodEditor {
 			boolean replacePageObject = false;
 			String expression = pageobjectMatcher.toMatchResult().group();
 			// extract all the lines related to this pageobject
-			String pageTxt = testClass.substring(testClass.indexOf(expression),testClass.indexOf("@endPage", testClass.indexOf(expression)));
+			int indexOfExp = testClass.indexOf(expression);
+			String pageTxt = testClass.substring(indexOfExp,testClass.indexOf("@endPage", indexOfExp));
 			pageTxt = pageTxt.replaceAll(pageObjectPattern.pattern(), "");
 			//System.out.println("***********************   " + pageTxt);
 
@@ -174,9 +175,11 @@ public class CustomMethodEditor {
 			
 			//create file if not exist or need to replace
 			StringBuilder fileContent = new StringBuilder();
+			
 			if(replacePageObject || !FileHandler.isFileExist(exactFile)){
-				FileHandler.createAndUpdateFile(replacePageObject, (exactFile), ("package "
-						+ Constants.PAGE_OBJECT_PACKAGE + ";\n\nimport org.openqa.selenium.By;\n\n" + "public final class " + pageClassName + " {"));
+				String pkgClassDec = "package "+ Constants.PAGE_OBJECT_PACKAGE +
+						";\n\nimport org.openqa.selenium.By;\n\n" + "public final class " + pageClassName + " {";
+				FileHandler.createAndUpdateFile(replacePageObject, (exactFile),(pkgClassDec));
 			}
 			
 			//get file content
