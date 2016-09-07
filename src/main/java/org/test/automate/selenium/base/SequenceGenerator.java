@@ -74,7 +74,7 @@ public class SequenceGenerator {
 		
 		FileHandler fileHandler = FileHandler.getInstance();
 		
-		FileHandler.writingToFile("D:/dhanuka/dev/workspaces/mentanance/eb-selenium-ide-automate/src/main/config/autogenerate.txt",""+id);
+		FileHandler.deleteAndWriteToFile("D:/dhanuka/dev/workspaces/mentanance/eb-selenium-ide-automate/src/main/config/autogenerate.txt",""+id);
 		InputStream is = FileHandler.getResourceAsStream("D:/dhanuka/dev/workspaces/mentanance/eb-selenium-ide-automate/src/main/config/autogenerate.txt");
 		String read = fileHandler.readInputStream(is);
 		System.out.println(read);

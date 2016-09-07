@@ -5,10 +5,11 @@
 
 	<TestSuite id="TestGoogleSuite" useRC="false" >
 		
-		<Parameter id="lst-ib" value="John" />
+		<Parameter id="nameParam" value="John" />
 		<Parameter id="seleniumType" value="webdriver" />
 
 		<TestCase id="testGoogle">
+			<function>login</function>
 		</TestCase>
 
 	</TestSuite>

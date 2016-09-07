@@ -1,4 +1,3 @@
-
 package com.example.tests;
 
 import java.util.regex.Pattern;
@@ -10,7 +9,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class Google {
+public class Test {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -19,17 +18,33 @@ public class Google {
   @Before
   public void setUp() throws Exception {
     driver = new FirefoxDriver();
-    baseUrl = "https://www.google.lk/";
+    baseUrl = "https://www.google.com/";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
   }
 
   @Test
-  public void testGoogle() throws Exception {
-    driver.get(baseUrl + "/?gfe_rd=cr&ei=2Yi6V4bMI43M8geVsKfYDg");
+  public void test() throws Exception {
+    // @pageobject(name='GooglePO1',replace=true)
+    // @function(name='login1',replace=true)
+    driver.get(baseUrl + "");
+    String nameParam = "dhanuka";
     driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys("dhanuka");
-    Thread.sleep(1000);
+    driver.findElement(By.id("lst-ib")).sendKeys(nameParam);
     driver.findElement(By.name("btnG")).click();
+
+    // @endFunction
+    // @endPage
+    
+ // @pageobject(name='GooglePO2',replace=true)
+    // @function(name='login2',replace=true)
+    driver.get(baseUrl + "");
+    driver.findElement(By.id("lst-ib")).clear();
+    driver.findElement(By.id("lst-ib")).sendKeys(nameParam);
+    driver.findElement(By.name("btnG")).click();
+    
+ 
+    // @endFunction
+ // @endPage
   }
 
   @After

@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import org.test.automate.selenium.base.FileHandler;
-import org.test.automate.selenium.base.RegexHandler;
+import org.test.automate.selenium.base.TestMethodsHandler;
 import org.test.automate.selenium.base.XMLUtil;
 import org.test.automate.selenium.template.Test;
 import org.test.automate.selenium.template.TestSuite;
@@ -33,7 +33,7 @@ public class TestCaseWriter {
 		XMLUtil xmlUtil = XMLUtil.getInstance();
 		Test test = (Test) xmlUtil.readXML(Constants.TEST_CASES_CONFIG, Test.class);
 
-		RegexHandler regexHandler = RegexHandler.getInstance();
+		TestMethodsHandler regexHandler = TestMethodsHandler.getInstance();
 
 		
 
@@ -45,7 +45,7 @@ public class TestCaseWriter {
 
 	public static void main(String... arg) throws Exception {
 		try {
-			RegexHandler regexHandler = RegexHandler.getInstance();
+			TestMethodsHandler regexHandler = TestMethodsHandler.getInstance();
 			//FileHandler fileHandler = FileHandler.getInstance();
 			/*InputStream is = fileHandler.getResourceAsStream(Constants.DOMAIN_CONFIG_FILE);
 			regexHandler.domainConfig.load(is);*/

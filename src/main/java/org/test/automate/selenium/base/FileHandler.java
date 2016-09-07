@@ -23,8 +23,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Properties;
+
+import static java.nio.file.Files.readAllBytes;
+import static java.nio.file.Paths.get;
 
 
 public class FileHandler {
@@ -82,7 +89,7 @@ public class FileHandler {
 		
 	}
 	
-	public static void writingToFile(final String fileLocation, final String output) throws IOException {
+	public static void deleteAndWriteToFile(final String fileLocation, final String output) throws IOException {
 
 		BufferedWriter bw = null;
 		FileWriter fw = null;
@@ -105,6 +112,39 @@ public class FileHandler {
 		}	
 		
 
+	}
+	
+	public static void createAndUpdateFile(final boolean replaceFile, final String fileLocation, final String output) {
+		try {
+			Path path = Paths.get(fileLocation);
+			Path parentDir = path.getParent();
+			if (!Files.exists(parentDir)){
+				Files.createDirectories(parentDir);
+			}			    
+			
+			if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+				Files.createFile(path);
+			}else if(replaceFile){
+				Files.delete(path);
+				Files.createFile(path);
+			}
+
+			Files.write(path, output.getBytes(), StandardOpenOption.APPEND);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static boolean isFileExist(final String fileLocation){
+		Path path = Paths.get(fileLocation);
+		return Files.exists(path, LinkOption.NOFOLLOW_LINKS);
+	}
+	
+	public static String getFileContent(final String fileLocation) throws IOException{
+		Path path = Paths.get(fileLocation);
+		return new String(readAllBytes(path));
 	}
 	
 	public static Properties loadResourceProperties(final String propertyFile) throws IOException {

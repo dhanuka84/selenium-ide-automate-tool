@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,20 +34,22 @@ import org.test.automate.selenium.template.TestCase;
 import org.test.automate.selenium.template.TestSuite;
 
 
-public class RegexHandler {
+public class TestMethodsHandler {
 	
-	private static final ThreadLocal<RegexHandler> threadLocal = new ThreadLocal<RegexHandler>() {
-		protected RegexHandler initialValue() {
-			return new RegexHandler();
+	private static final ThreadLocal<TestMethodsHandler> threadLocal = new ThreadLocal<TestMethodsHandler>() {
+		protected TestMethodsHandler initialValue() {
+			return new TestMethodsHandler();
 		}
 	};
 	
+	public static final Map<String,Map<String,Set<String>>> fieldsPerPageObject = new ConcurrentHashMap<String,Map<String,Set<String>>>(); 
 	
-	private RegexHandler() {
+	
+	private TestMethodsHandler() {
 		
     }
     
-    public static RegexHandler getInstance() {
+    public static TestMethodsHandler getInstance() {
         return threadLocal.get();
     }
     
@@ -176,7 +179,8 @@ public class RegexHandler {
 
 		String packageName = Constants.TEST_PACKAGE;
 		String className = suite.getId();
-		String outputFile = Constants.TEST_SOURCE_LOCATION + Constants.TEST_PACKAGE.replace(".", "/") + "/"+suite.getId().trim()+".java";
+		String testFilePath = Constants.TEST_SOURCE_LOCATION + Constants.TEST_PACKAGE.replace(".", "/") + "/"+suite.getId().trim()+".java";
+		String pageobjectPath = Constants.TEST_SOURCE_LOCATION + Constants.PAGE_OBJECT_PACKAGE.replace(".", "/") + "/";
 		
 		List<TestCase> testMethods = suite.getTestCases();
 		
@@ -242,7 +246,11 @@ public class RegexHandler {
 
 		}
 		
-		FileHandler.writingToFile(outputFile,finalOutput);
+		FileHandler.deleteAndWriteToFile(testFilePath,finalOutput);
+		
+		//createOrupdate PageObject class
+		
+		methodEditor.extractPageObject(finalOutput,pageobjectPath);
 
 		return finalOutput;
 	}

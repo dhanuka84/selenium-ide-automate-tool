@@ -80,12 +80,29 @@ public class TestGoogleSuite implements Serializable{
 
 
  @Test
-  public void testGoogle() throws Exception {
-    driver.get(baseUrl + "/?gfe_rd=cr&ei=2Yi6V4bMI43M8geVsKfYDg");
+  public void test() throws Exception {
+    // @pageobject(name='GooglePO1',replace=true)
+    // @function(name='login1',replace=true)
+    driver.get(baseUrl + "");
+    String nameParam = "John";
+
     describer.findElementExplicitWait( driver , By.id("lst-ib")).clear();
-    describer.findElementExplicitWait( driver , By.id("lst-ib")).sendKeys("dhanuka");
-    Thread.sleep(1000);
+    describer.findElementExplicitWait( driver , By.id("lst-ib")).sendKeys(nameParam);
     describer.findElementExplicitWait( driver , By.name("btnG")).click();
+
+    // @endFunction
+    // @endPage
+    
+ // @pageobject(name='GooglePO2',replace=true)
+    // @function(name='login2',replace=true)
+    driver.get(baseUrl + "");
+    describer.findElementExplicitWait( driver , By.id("lst-ib")).clear();
+    describer.findElementExplicitWait( driver , By.id("lst-ib")).sendKeys(nameParam);
+    describer.findElementExplicitWait( driver , By.name("btnG")).click();
+    
+ 
+    // @endFunction
+ // @endPage
   }
 
   

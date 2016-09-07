@@ -64,7 +64,7 @@ public class XMLUtil{
     	
     	Test test = (Test) getInstance().readXML("Test.xml", Test.class);
     	
-    	RegexHandler regexHandler = RegexHandler.getInstance();
+    	TestMethodsHandler regexHandler = TestMethodsHandler.getInstance();
     	
     	
         	try {

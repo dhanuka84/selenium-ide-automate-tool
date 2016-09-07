@@ -22,6 +22,7 @@ public class Constants {
 	
 	public static final String TEST_CASES_CONFIG = "Test.xml";
 	public static final String TEST_PACKAGE = "org.test.automate.selenium.testng";
+	public static final String PAGE_OBJECT_PACKAGE = "org.test.automate.selenium.testng.pageobject";
 	public static final String 	TEST_SOURCE_LOCATION = "src/test/java/";
 	public static final String DOMAIN_CONFIG_FILE = "domain.properties";
 	public static final String BROWSER_CONFIG_FILE = "browser.properties";
