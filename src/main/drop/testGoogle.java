@@ -24,22 +24,30 @@ public class Test {
 
   @Test
   public void test() throws Exception {
-    // @pageobject(name='GooglePO1',replace=true)
-    // @function(name='login1',replace=true)
+    
     driver.get(baseUrl + "");
-    String nameParam = "dhanuka";
+    
+    
+ // @pageobject(name='GooglePO1',replace=true)
+    String nameParam1 = "dhanuka";
+    // @function(name='login1',replace=true)
+    
     driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam);
+    driver.findElement(By.id("lst-ib")).sendKeys(nameParam1);
     driver.findElement(By.name("btnG")).click();
 
     // @endFunction
     // @endPage
     
- // @pageobject(name='GooglePO2',replace=true)
-    // @function(name='login2',replace=true)
+ 
     driver.get(baseUrl + "");
+    
+ // @pageobject(name='GooglePO2',replace=true)
+    String nameParam2 = "dhanuka";
+    // @function(name='login2',replace=true)
+    
     driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam);
+    driver.findElement(By.id("lst-ib")).sendKeys(nameParam2);
     driver.findElement(By.name("btnG")).click();
     
  

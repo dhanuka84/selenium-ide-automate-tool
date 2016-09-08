@@ -6,6 +6,7 @@ import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import org.test.automate.selenium.testng.pageobject.*;
 import org.test.automate.selenium.base.BaseDriverSetup;
 import org.test.automate.selenium.base.BaseDriverSetup.JUnitSelenium;
 import org.test.automate.selenium.template.CustomMethodDescriber;

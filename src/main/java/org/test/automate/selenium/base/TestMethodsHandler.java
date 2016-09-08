@@ -42,7 +42,8 @@ public class TestMethodsHandler {
 		}
 	};
 	
-	public static final Map<String,Map<String,Set<String>>> fieldsPerPageObject = new ConcurrentHashMap<String,Map<String,Set<String>>>(); 
+	public static final Map<String,Map<String,Set<String>>> fieldsPerPageObject = new ConcurrentHashMap<String,Map<String,Set<String>>>();
+	public static final Map<String,Set<String>> methodSignaturePerPO = new ConcurrentHashMap<String,Set<String>>();
 	
 	
 	private TestMethodsHandler() {
@@ -245,12 +246,12 @@ public class TestMethodsHandler {
 			finalOutput = methodEditor.replaceFindMethod(finalOutput);
 
 		}
+		//createOrupdate PageObject class
+		StringBuilder finalTestClass = new StringBuilder(finalOutput);
+		methodEditor.extractPageObject(finalTestClass,pageobjectPath);
+		finalOutput = methodEditor.addFunctionsToTest(finalOutput);
 		
 		FileHandler.deleteAndWriteToFile(testFilePath,finalOutput);
-		
-		//createOrupdate PageObject class
-		
-		methodEditor.extractPageObject(finalOutput,pageobjectPath);
 
 		return finalOutput;
 	}

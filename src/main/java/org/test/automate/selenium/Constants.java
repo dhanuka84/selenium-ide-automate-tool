@@ -37,6 +37,7 @@ public class Constants {
 	public static final String TEST_FRAMEWORK_JUNIT ="junit";
 	public static final String TESTNG_BASE_CLASS = "SeleniumBase";
 	public static final String JUNIT_BASE_CLASS = "JUnitSeleniumBase";
+	public static final String PAGE_OBJECT_BASE_CLASS = "PageObjectBase";
 	
 	public static final String USE_RC = "private static boolean useRC = true;\n";
 	

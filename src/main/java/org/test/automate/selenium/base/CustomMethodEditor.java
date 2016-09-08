@@ -16,10 +16,11 @@
 
 package org.test.automate.selenium.base;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +64,7 @@ public class CustomMethodEditor {
     private static Pattern replacePattern = Pattern.compile("(replace=true|false)+\\)");
     private static Pattern endOfPagePattern = Pattern.compile("//\\s*@\\s*endPage");
     private static Pattern endOfFunctionPattern = Pattern.compile("//\\s*@\\s*endFunction");
+    private static Pattern parameterPattern = Pattern.compile("\\s*String\\s+.*\\s*=\\s*\".*\";\\n*");
     
     //By.id("lst-ib")
     private static Pattern findElementPattern = Pattern.compile("By.[a-zA-Z]+\\(\".*\"\\)");
@@ -71,10 +73,10 @@ public class CustomMethodEditor {
     private static Pattern elementNamePattern = Pattern.compile("\\s*private\\s+static\\s+final\\s+By\\s+ELEMENT\\d+");
     
     //describer.findElementExplicitWait( driver , By.id("lst-ib")).clear();
-    private static Pattern elementPattern = Pattern.compile("describer.findElementExplicitWait\\s*\\(.*\\);\\n*");
+    static Pattern elementPattern = Pattern.compile("describer.findElementExplicitWait\\s*\\(.*\\);\\n*");
     
-    private static Pattern findFieldPattern = Pattern.compile("\\s*private\\s+static\\s+final\\s+By\\s+ELEMENT\\d+\\s*=\\s*By.[a-zA-Z]+\\(\".*\"\\);\\n*");
-    
+	private static Pattern findFieldPattern = Pattern
+			.compile("\\s*private\\s+static\\s+final\\s+By\\s+ELEMENT\\d+\\s*=\\s*By.[a-zA-Z]+\\(\".*\"\\);\\n*");
     
     //constrants
     private static final String FIELD_NAME_CONSTANT = "ELEMENT";
@@ -152,10 +154,13 @@ public class CustomMethodEditor {
     
 */	
     
-	public String extractPageObject(final String testClass, final String filePath) throws Exception {
+	public String extractPageObject(final StringBuilder testClass, final String filePath) throws Exception {
 
 		String finalPage = null;
-		Matcher pageobjectMatcher = pageObjectPattern.matcher(testClass);
+		Matcher pageobjectMatcher = pageObjectPattern.matcher(testClass.toString());
+		
+		FileHandler fileHandler = FileHandler.getInstance();
+		String pageObjTemplate = fileHandler.readInputStream(FileHandler.getResourceAsStream(Constants.PAGE_OBJECT_BASE_CLASS+".java"));
 
 		while (pageobjectMatcher.find()) {
 			boolean replacePageObject = false;
@@ -177,8 +182,11 @@ public class CustomMethodEditor {
 			StringBuilder fileContent = new StringBuilder();
 			
 			if(replacePageObject || !FileHandler.isFileExist(exactFile)){
-				String pkgClassDec = "package "+ Constants.PAGE_OBJECT_PACKAGE +
-						";\n\nimport org.openqa.selenium.By;\n\n" + "public final class " + pageClassName + " {";
+				/*String pkgClassDec = "package "+ Constants.PAGE_OBJECT_PACKAGE +
+						";\n\nimport org.openqa.selenium.By;\n\n" + "public final class " + pageClassName + " {";*/
+				String pkgClassDec = pageObjTemplate.replaceAll(Constants.PAGE_OBJECT_BASE_CLASS, pageClassName);
+				
+				//start of class body
 				FileHandler.createAndUpdateFile(replacePageObject, (exactFile),(pkgClassDec));
 			}
 			
@@ -199,6 +207,19 @@ public class CustomMethodEditor {
 				String functionBody = pageTxt.substring(indexOfFuncExp,pageTxt.indexOf("@endFunction", indexOfFuncExp));
 				functionBody = functionBody.replaceAll(functionPattern.pattern(), "");
 				
+				//find parameters
+				Matcher parameterMatcher = parameterPattern.matcher(pageTxt);
+				StringBuilder parameters = new StringBuilder();
+				while(parameterMatcher.find()){
+					if(parameters.length() > 0){
+						parameters.append(",");
+					}
+					String parameterExp = parameterMatcher.toMatchResult().group();
+					parameterExp = parameterExp.trim();
+					parameterExp = parameterExp.substring(0, parameterExp.indexOf("="));
+					parameters.append(parameterExp);
+				}
+				
 				
 				functionExpress = StringUtil.removeSpaces(functionExpress);
 				String functionName = functionExpress.substring(functionExpress.indexOf("name='") + 6,
@@ -206,7 +227,7 @@ public class CustomMethodEditor {
 				replaceFunction = getReplaceValue(functionExpress);
 				
 				StringBuilder javaMethod = new StringBuilder();
-				javaMethod.append(" public void "+functionName+"(){\n");
+				javaMethod.append(" public void "+functionName+"("+parameters.toString()+ "){\n");
 				javaMethod.append(functionBody).append("\n }");
 				
 				
@@ -221,9 +242,18 @@ public class CustomMethodEditor {
 					//TODO do not replace function
 				}
 				
+				//create functions to pageobject mapping
+				if(TestMethodsHandler.methodSignaturePerPO.containsKey(Constants.PAGE_OBJECT_PACKAGE+"."+pageClassName)){
+					Set<String> funtions = TestMethodsHandler.methodSignaturePerPO.get(Constants.PAGE_OBJECT_PACKAGE+"."+pageClassName);
+					funtions.add(functionName+"("+parameters.toString()+ ")");
+				}else{
+					Set<String> funtions = new HashSet<String>();
+					funtions.add(functionName+"("+parameters.toString()+ ")");
+					TestMethodsHandler.methodSignaturePerPO.putIfAbsent(Constants.PAGE_OBJECT_PACKAGE+"."+pageClassName, funtions);
+				}
 				//replace page object
 				if(replacePageObject){	
-					constructFieldsAndMethods(fileContent, pageClassName, javaMethod);
+					constructFieldsAndFunctions(fileContent, pageClassName, javaMethod);
 					}else{
 					//TODO
 				}
@@ -233,18 +263,18 @@ public class CustomMethodEditor {
 			}
 			
 			if(replacePageObject){
-				fileContent.append("\n }");
+				fileContent.append("\n }");//end of class body
 				FileHandler.createAndUpdateFile(replacePageObject, (exactFile), fileContent.toString());
-				System.out.println("***********************   " + fileContent.toString());
 			}
-			
-
+			//edit test class
 		}
+		
+		
 
 		return finalPage;
 	}
 	
-	private void constructFieldsAndMethods(final StringBuilder fileContent, final String pageClassName,final StringBuilder javaMethod)
+	private void constructFieldsAndFunctions(final StringBuilder fileContent, final String pageClassName,final StringBuilder javaMethod)
 			throws Exception {
 
 		Matcher fieldMatcher = elementNamePattern.matcher(fileContent);
@@ -327,13 +357,13 @@ public class CustomMethodEditor {
 		if(nextElementNo == ELEMENT_START_NO){
 			//no feels added yet
 			int bodyStart = page.indexOf("{");
-			page.replace(bodyStart, bodyStart+1, ("{\n\n"+field));
+			page.replace(bodyStart, bodyStart+1, ("{\n"+field));
 			
 		}else{
 			Matcher fieldMatcher = findFieldPattern.matcher(page);
 			String lastField = returnLastMatch(fieldMatcher);
 			int lastIndex = page.lastIndexOf(lastField);
-			page.replace(lastIndex, lastIndex+lastField.length()+1,("\n\n"+lastField+"\n"+field+"\n\n"));
+			page.replace(lastIndex, lastIndex+lastField.length()+1,("\n"+lastField+field+"\n"));
 		}
 		
 	}
@@ -358,4 +388,51 @@ public class CustomMethodEditor {
 		
 		return replace;
 	}
+	
+	public String addFunctionsToTest(final String testClass){
+		
+		String finalOutput = testClass;
+		finalOutput = finalOutput.replaceAll(elementPattern.pattern(), "");
+		Set<Entry<String, Set<String>>> entries = TestMethodsHandler.methodSignaturePerPO.entrySet();
+		Iterator<Entry<String, Set<String>>> iter = entries.iterator();
+		
+		while(iter.hasNext()){
+			Entry<String, Set<String>> iterNext = iter.next();
+			//org.test.automate.selenium.testng.pageobject.GooglePO2
+			String pageObjectName = iterNext.getKey();
+			String pageObjectClassName = pageObjectName.substring(pageObjectName.lastIndexOf(".")+1, pageObjectName.length());
+			String firstLetter = pageObjectClassName.substring(0, 1);
+			String pageObjVariable = pageObjectClassName.replaceFirst(firstLetter, firstLetter.toLowerCase());
+			//GooglePO2 googlePO2 = new GooglePO2(driver,describer);
+			String objectConstruct = pageObjectClassName +" "+pageObjVariable+"= new "+pageObjectClassName+"(driver,describer);";
+			String pageObjPattern = "@pageobject\\(name='"+pageObjectClassName+"'(,replace=true|false)*\\)";
+			Matcher pageObjMatcher = Pattern.compile(pageObjPattern).matcher(finalOutput);
+			if(pageObjMatcher.find()){
+				// @pageobject(name='GooglePO1',replace=true)
+				String pageObjAnnotate = pageObjMatcher.group();
+				//googlePO2.login1(nameParam1 )
+				finalOutput = finalOutput.replaceFirst(pageObjPattern,							
+						(pageObjAnnotate+"\n\n"+objectConstruct));
+			}
+			
+			Set<String> methtodSignatures = iterNext.getValue();
+			
+			for(String method : methtodSignatures){
+				//login1(String nameParam1 )
+				String methodName = method.substring(0, method.indexOf("("));
+				// @function(name='login1',replace=true)
+				String functionPattern = "@function\\(name='"+methodName+"'(,replace=true|false)*\\)";
+				Matcher funcAnnoMatcher = Pattern.compile(functionPattern).matcher(finalOutput);
+				if(funcAnnoMatcher.find()){
+					String functionAnnotate = funcAnnoMatcher.group();
+					//googlePO2.login1(nameParam1 )
+					finalOutput = finalOutput.replaceFirst(functionPattern,							
+							(functionAnnotate+"\n\n"+pageObjVariable+"."+method.replaceAll("String\\s+", "")+";"));
+				}
+				
+			}
+		}
+
+		return finalOutput;
+	} 
 }
