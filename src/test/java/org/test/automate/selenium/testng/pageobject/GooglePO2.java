@@ -5,10 +5,7 @@ import org.test.automate.selenium.template.CustomMethodDescriber;
 import org.openqa.selenium.By;
 
 public final class GooglePO2 {
-
-private static final By ELEMENT1 = By.id("lst-ib");
-private static final By ELEMENT2 = By.name("btnG");
-
+	
 	private final WebDriver driver;
 	private final CustomMethodDescriber describer;
 	
@@ -20,7 +17,6 @@ private static final By ELEMENT2 = By.name("btnG");
 
 
  public void login2(String nameParam2 ){
-
     
     describer.findElementExplicitWait( driver , ELEMENT1).clear();
     describer.findElementExplicitWait( driver , ELEMENT1).sendKeys(nameParam2);

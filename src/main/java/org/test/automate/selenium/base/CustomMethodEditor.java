@@ -53,6 +53,7 @@ public class CustomMethodEditor {
     private static Pattern ByXpathPattern = Pattern.compile("By.xpath\\(\"//\\w+.+\"\\)");
     private static Pattern ByIdPattern = Pattern.compile("By.id\\(\"\\w+.+\"\\)");
     private static Pattern ByNamePattern = Pattern.compile("By.name\\(\"\\w+.+\"\\)");
+    
     private static Pattern threadSleepPattern = Pattern.compile("Thread.sleep\\([0-9]+\\);");
     private static Pattern threadErrorPattern = Pattern.compile("//.*ERROR.*\\[Thread.sleep\\([0-9]+\\);\\]\\]");
   //.*ERROR.*\[Thread.sleep\([0-9]+\);\]]
@@ -140,10 +141,11 @@ public class CustomMethodEditor {
 		return sb.toString();
     }
     
-/**    
+/**   
+ * This method use to extract information related to pageobject. 
+ * 	driver.get(baseUrl + "");
     // @pageobject(name='GooglePO1',replace=true)
     // @function(name='login1',replace=true)
-    driver.get(baseUrl + "");
     String nameParam = "dhanuka";
     driver.findElement(By.id("lst-ib")).clear();
     driver.findElement(By.id("lst-ib")).sendKeys(nameParam);
@@ -208,7 +210,7 @@ public class CustomMethodEditor {
 				functionBody = functionBody.replaceAll(functionPattern.pattern(), "");
 				
 				//find parameters
-				Matcher parameterMatcher = parameterPattern.matcher(pageTxt);
+				Matcher parameterMatcher = parameterPattern.matcher(functionBody);
 				StringBuilder parameters = new StringBuilder();
 				while(parameterMatcher.find()){
 					if(parameters.length() > 0){
@@ -228,6 +230,7 @@ public class CustomMethodEditor {
 				
 				StringBuilder javaMethod = new StringBuilder();
 				javaMethod.append(" public void "+functionName+"("+parameters.toString()+ "){\n");
+				functionBody = functionBody.replaceAll(parameterPattern.pattern(), "");
 				javaMethod.append(functionBody).append("\n }");
 				
 				
@@ -421,13 +424,14 @@ public class CustomMethodEditor {
 				//login1(String nameParam1 )
 				String methodName = method.substring(0, method.indexOf("("));
 				// @function(name='login1',replace=true)
-				String functionPattern = "@function\\(name='"+methodName+"'(,replace=true|false)*\\)";
+				//String functionPattern = "@function\\(name='"+methodName+"'(,replace=true|false)*\\)";
+				String functionPattern = "//\\s*@endFunction\\(name='"+methodName+"'\\)";
 				Matcher funcAnnoMatcher = Pattern.compile(functionPattern).matcher(finalOutput);
 				if(funcAnnoMatcher.find()){
 					String functionAnnotate = funcAnnoMatcher.group();
 					//googlePO2.login1(nameParam1 )
 					finalOutput = finalOutput.replaceFirst(functionPattern,							
-							(functionAnnotate+"\n\n"+pageObjVariable+"."+method.replaceAll("String\\s+", "")+";"));
+							(pageObjVariable+"."+method.replaceAll("String\\s+", "")+";")+"\n"+functionAnnotate);
 				}
 				
 			}

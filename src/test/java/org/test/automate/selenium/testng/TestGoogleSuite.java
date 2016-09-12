@@ -88,13 +88,18 @@ public class TestGoogleSuite implements Serializable{
     
  // @pageobject(name='GooglePO1',replace=true)
 
-GooglePO1 googlePO1= new GooglePO1(driver,describer);
-    String nameParam1 = "dhanuka";
+GooglePO1 googlePO1= new GooglePO1(driver,describer);   
     // @function(name='login1',replace=true)
-
-googlePO1.login1(nameParam1 );
+    String nameParam1 = "dhanuka";
+    String nameParam3 = "dhanuka";
     
-                // @endFunction
+                googlePO1.login1(nameParam1 ,nameParam3 );
+// @endFunction(name='login1')
+    
+ // @function(name='login3',replace=true)
+    
+            googlePO1.login3();
+// @endFunction(name='login3')
     // @endPage
     
  
@@ -103,14 +108,44 @@ googlePO1.login1(nameParam1 );
  // @pageobject(name='GooglePO2',replace=true)
 
 GooglePO2 googlePO2= new GooglePO2(driver,describer);
-    String nameParam2 = "dhanuka";
     // @function(name='login2',replace=true)
-
-googlePO2.login2(nameParam2 );
+    String nameParam2 = "dhanuka";
     
                 
  
-    // @endFunction
+    googlePO2.login2(nameParam2 );
+// @endFunction(name='login2')
+ // @endPage
+  }
+  
+  @Test
+  public void test2() throws Exception {
+    
+    driver.get(baseUrl + "");
+    
+    
+ // @pageobject(name='GooglePO1',replace=true)   
+    // @function(name='login1',replace=true)
+    String nameParam1 = "dhanuka";
+    String nameParam3 = "dhanuka";
+    
+                // @endFunction(name='login1')
+    
+ // @function(name='login3',replace=true)
+    
+            // @endFunction(name='login3')
+    // @endPage
+    
+ 
+    driver.get(baseUrl + "");
+    
+ // @pageobject(name='GooglePO2',replace=true)
+    // @function(name='login2',replace=true)
+    String nameParam2 = "dhanuka";
+    
+                
+ 
+    // @endFunction(name='login2')
  // @endPage
   }
 
