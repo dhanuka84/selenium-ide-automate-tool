@@ -5,7 +5,10 @@ import org.test.automate.selenium.template.CustomMethodDescriber;
 import org.openqa.selenium.By;
 
 public final class GooglePO1 {
-	
+
+private static final By ELEMENT1 = By.id("lst-ib");
+private static final By ELEMENT2 = By.name("btnG");
+
 	private final WebDriver driver;
 	private final CustomMethodDescriber describer;
 	

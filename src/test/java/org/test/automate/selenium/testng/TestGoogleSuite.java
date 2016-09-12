@@ -118,36 +118,7 @@ GooglePO2 googlePO2= new GooglePO2(driver,describer);
  // @endPage
   }
   
-  @Test
-  public void test2() throws Exception {
-    
-    driver.get(baseUrl + "");
-    
-    
- // @pageobject(name='GooglePO1',replace=true)   
-    // @function(name='login1',replace=true)
-    String nameParam1 = "dhanuka";
-    String nameParam3 = "dhanuka";
-    
-                // @endFunction(name='login1')
-    
- // @function(name='login3',replace=true)
-    
-            // @endFunction(name='login3')
-    // @endPage
-    
- 
-    driver.get(baseUrl + "");
-    
- // @pageobject(name='GooglePO2',replace=true)
-    // @function(name='login2',replace=true)
-    String nameParam2 = "dhanuka";
-    
-                
- 
-    // @endFunction(name='login2')
- // @endPage
-  }
+  
 
   
 }

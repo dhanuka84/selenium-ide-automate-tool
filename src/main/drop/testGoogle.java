@@ -63,46 +63,7 @@ public class Test {
  // @endPage
   }
   
-  @Test
-  public void test2() throws Exception {
-    
-    driver.get(baseUrl + "");
-    
-    
- // @pageobject(name='GooglePO1',replace=true)   
-    // @function(name='login1',replace=true)
-    String nameParam1 = "dhanuka";
-    String nameParam3 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam1);
-    driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login1')
-    
- // @function(name='login3',replace=true)
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login3')
-    // @endPage
-    
- 
-    driver.get(baseUrl + "");
-    
- // @pageobject(name='GooglePO2',replace=true)
-    // @function(name='login2',replace=true)
-    String nameParam2 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam2);
-    driver.findElement(By.name("btnG")).click();
-    
- 
-    // @endFunction(name='login2')
- // @endPage
-  }
+  
 
   @After
   public void tearDown() throws Exception {
