@@ -13,5 +13,8 @@ public final class PageObjectBase {
 		this.driver = driver;
 		this.describer = describer;
 	}
+	
+	
+}
 
 

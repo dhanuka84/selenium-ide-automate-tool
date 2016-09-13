@@ -9,7 +9,6 @@
 		<Parameter id="seleniumType" value="webdriver" />
 
 		<TestCase id="testGoogle">
-			<function>login</function>
 		</TestCase>
 
 	</TestSuite>

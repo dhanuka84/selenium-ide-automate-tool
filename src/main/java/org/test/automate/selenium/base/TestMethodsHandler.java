@@ -248,7 +248,7 @@ public class TestMethodsHandler {
 		}
 		//createOrupdate PageObject class
 		StringBuilder finalTestClass = new StringBuilder(finalOutput);
-		methodEditor.extractPageObject(finalTestClass,pageobjectPath);
+		methodEditor.createPageObject(finalTestClass,pageobjectPath);
 		finalOutput = methodEditor.addFunctionsToTest(finalOutput);
 		
 		FileHandler.deleteAndWriteToFile(testFilePath,finalOutput);
