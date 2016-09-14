@@ -51,8 +51,7 @@ public class TestGoogleSuite implements Serializable {
 		 * Thread.sleep(2000);
 		 * 
 		 * if(useRC){ selenium.click("//img[@alt='Logout']"); }else{
-		 * 
-		 * }
+		 * driver.findElement(By.xpath("//img[@alt='Logout']")).click(); }
 		 */
 
 		Thread.currentThread().sleep(2000);
@@ -71,79 +70,90 @@ public class TestGoogleSuite implements Serializable {
 	}
 
 	@Test
-	public void test() throws Exception {
-
-		driver.get(baseUrl + "");
-
-		// @pageobject(name='GooglePO1',replace=true)
+	public void test1() throws Exception {
 
 		GooglePO1 googlePO1 = new GooglePO1(driver, describer);
-		// @function(name='login1',replace=true)
-		String nameParam1 = "dhanuka";
-		String nameParam3 = "dhanuka";
-
-		googlePO1.login1(nameParam1, nameParam3);
-		// @endFunction(name='login1')
-
-		// @function(name='login3',replace=true)
-
-		googlePO1.login3();
-		// @endFunction(name='login3')
-		// @endPage
 
 		driver.get(baseUrl + "");
+		String nameParam1 = "John";
 
-		// @pageobject(name='GooglePO2',replace=true)
+		String nameParam3 = "dhanuka";
+		googlePO1.login1(nameParam1, nameParam3);
+
+		googlePO1.login3();
 
 		GooglePO2 googlePO2 = new GooglePO2(driver, describer);
-		// @function(name='login2',replace=true)
 		String nameParam2 = "dhanuka";
-
 		googlePO2.login2(nameParam2);
-		// @endFunction(name='login2')
-		// @endPage
+
 	}
 
 	@Test
 	public void test2() throws Exception {
 
-		driver.get(baseUrl + "");
-
-		// @pageobject(name='GooglePO1',replace=true)
-
 		GooglePO1 googlePO1 = new GooglePO1(driver, describer);
-		// @function(name='login1',replace=true)
-		String nameParam1 = "dhanuka";
+		String nameParam1 = "John";
+
 		String nameParam3 = "dhanuka";
-
 		googlePO1.login1(nameParam1, nameParam3);
-		// @endFunction(name='login1')
-
-		// @function(name='login3',replace=true)
 
 		googlePO1.login3();
-		// @endFunction(name='login3')
 
-		// @function(name='login4',replace=true)
 		String nameParam4 = "dhanuka";
 		String nameParam5 = "dhanuka";
-
 		googlePO1.login4(nameParam4, nameParam5);
-		// @endFunction(name='login4')
 
-		// @endPage
-
-		driver.get(baseUrl + "");
-
-		// @pageobject(name='GooglePO2',replace=true)
+		String nameParam6 = "dhanuka";
+		String nameParam7 = "dhanuka";
+		googlePO1.login1(nameParam6, nameParam7);
 
 		GooglePO2 googlePO2 = new GooglePO2(driver, describer);
-		// @function(name='login2',replace=true)
 		String nameParam2 = "dhanuka";
-
 		googlePO2.login2(nameParam2);
-		// @endFunction(name='login2')
-		// @endPage
+
 	}
 
+	@Test
+	public void test3() throws Exception {
+
+		GooglePO1 googlePO1 = new GooglePO1(driver, describer);
+
+		driver.get(baseUrl + "");
+		String nameParam1 = "John";
+
+		String nameParam3 = "dhanuka";
+		googlePO1.login1(nameParam1, nameParam3);
+
+		googlePO1.login3();
+
+		GooglePO2 googlePO2 = new GooglePO2(driver, describer);
+		String nameParam2 = "dhanuka";
+		googlePO2.login2(nameParam2);
+
+	}
+
+	@Test
+	public void test4() throws Exception {
+
+		GooglePO1 googlePO1 = new GooglePO1(driver, describer);
+		String nameParam1 = "John";
+
+		String nameParam3 = "dhanuka";
+		googlePO1.login1(nameParam1, nameParam3);
+
+		googlePO1.login3();
+
+		String nameParam4 = "dhanuka";
+		String nameParam5 = "dhanuka";
+		googlePO1.login4(nameParam4, nameParam5);
+
+		String nameParam6 = "dhanuka";
+		String nameParam7 = "dhanuka";
+		googlePO1.login1(nameParam6, nameParam7);
+
+		GooglePO2 googlePO2 = new GooglePO2(driver, describer);
+		String nameParam2 = "dhanuka";
+		googlePO2.login2(nameParam2);
+
+	}
 }

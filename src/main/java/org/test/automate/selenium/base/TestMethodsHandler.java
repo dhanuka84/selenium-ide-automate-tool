@@ -249,11 +249,51 @@ public class TestMethodsHandler {
 		//createOrupdate PageObject class
 		StringBuilder finalTestClass = new StringBuilder(finalOutput);
 		methodEditor.createPageObject(finalTestClass,pageobjectPath);
-		finalOutput = methodEditor.addFunctionsToTest(finalOutput);
+		List<String> testCases = methodEditor.addFunctionsToTest(finalOutput);
+		finalOutput = recreateTestSuite(testCases, baseClass);
 		
-		FileHandler.deleteAndWriteToFile(testFilePath,finalOutput);
+		// replace class name
+		pattern = baseClassPatternTestng;
+		if (isJunit) {
+			pattern = baseClassPatternJuit;
+		}
+
+		classMatcher = pattern.matcher(finalOutput);
+		while (classMatcher.find()) {
+			finalOutput = classMatcher.replaceFirst(className);
+			break;
+		}
+		
+		// replace package
+		finalClass = new StringBuilder(finalOutput);
+		packageEndIndex = finalClass.indexOf(";");
+		packageStartIndex = finalClass.indexOf("package");
+		finalClass.delete(packageStartIndex, packageEndIndex);
+		packageEndIndex = finalClass.indexOf(";");
+		finalClass.replace(0, packageEndIndex, "package " + packageName);
+
+		//finalOutput = finalOutput.replaceFirst(regex, replacement)
+		FileHandler.deleteAndWriteToFile(testFilePath,finalClass.toString());
 
 		return finalOutput;
+	}
+	
+	private String recreateTestSuite(final List<String> testCases, final String baseClass){
+		
+		StringBuilder finalOutput = new StringBuilder();
+		StringBuilder testClass = new StringBuilder(baseClass);
+		int index = 0;
+		for(String methodBody : testCases){
+			++index;
+			finalOutput.append("@Test").append("\n").append("public void test"+index+"() throws Exception {\n");
+			finalOutput.append(methodBody).append("\n").append("}");
+	
+		}
+		
+		int end = baseClass.lastIndexOf("}");
+		return testClass.replace(end+"}".length(), end+"}".length(), finalOutput+"\n}").toString();
+		
+		
 	}
 	
 	private String changeUseRC(final String defaultClass){

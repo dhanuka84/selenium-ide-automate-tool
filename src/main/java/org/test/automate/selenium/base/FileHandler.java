@@ -96,7 +96,7 @@ public class FileHandler {
 		try{
 			File file = new File(fileLocation);
 			
-			System.out.println("output : "+output);
+			//System.out.println("output : "+output);
 
 			// if file doesnt exists, then create it
 			if (file.exists()) {

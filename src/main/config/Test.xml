@@ -5,11 +5,11 @@
 
 	<TestSuite id="TestGoogleSuite" useRC="false" >
 		
-		<Parameter id="nameParam" value="John" />
+		<Parameter id="nameParam1" value="John" />
 		<Parameter id="seleniumType" value="webdriver" />
 
-		<TestCase id="testGoogle">
-		</TestCase>
+		<TestCase id="testGoogle"/>
+		<TestCase id="testGoogle2"/>
 
 	</TestSuite>
 
