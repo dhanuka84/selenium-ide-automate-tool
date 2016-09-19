@@ -66,9 +66,8 @@ public class CustomMethodEditor {
   //driver.findElement(By.xpath("//input[@name='username']")).clear();
  //describer.findElementExplicitWait(driver, By.xpath("//input[@name='username']")).clear();
     
-    private static Pattern pageObjectPattern = Pattern.compile("//\\s*@pageobject\\(name='\\w+.+'(,replace=true|false)*\\)");
-    private static Pattern functionStartPattern = Pattern.compile("//\\s*@function\\(name='\\w+.+'(,replace=true|false)*\\)");
-    private static Pattern replacePattern = Pattern.compile("(replace=true|false)+\\)");
+    private static Pattern pageObjectPattern = Pattern.compile("//\\s*@pageobject\\(name='\\w+.+'\\s*\\)");
+    private static Pattern functionStartPattern = Pattern.compile("//\\s*@function\\(name='\\w+.+'\\s*,*\\s*(manualClass=')*\\w*.*\\s*\\)");
     private static Pattern endOfPagePattern = Pattern.compile("//\\s*@\\s*endPage");
     private static Pattern endOfFunctionPattern = Pattern.compile("//\\s*@\\s*endFunction");
     private static Pattern parameterPattern = Pattern.compile("\\s*String\\s+.*\\s*=\\s*\".*\";\\n*");
@@ -92,6 +91,7 @@ public class CustomMethodEditor {
     
     private static final int ELEMENT_START_NO = 1;
     private static final String FIND_ELEMENT_CUSTOM_METHOD = "describer.findElementExplicitWait(";
+    private static final String MANUAL_FUNCTION_ATTRIBUTE = "manualClass='";
     
     public String replaceFindMethod(final String testClass){
 		    	
@@ -190,7 +190,7 @@ public class CustomMethodEditor {
 		Matcher pageobjectMatcher = pageObjectPattern.matcher(testCase.toString());
 
 		while (pageobjectMatcher.find()) {
-			boolean replacePageObject = false;
+			boolean replacePageObject = true;
 			String expression = pageobjectMatcher.toMatchResult().group();
 			// extract all the lines related to this pageobject
 			int indexOfExp = testCase.indexOf(expression);
@@ -201,7 +201,7 @@ public class CustomMethodEditor {
 			// create pageobject file
 			expression = StringUtil.removeSpaces(expression);
 			// extract replace condition
-			replacePageObject = getReplaceValue(expression);
+			//replacePageObject = getReplaceValue(expression);
 			String pageClassName = expression.substring(expression.indexOf("name='") + 6, expression.lastIndexOf("'"));
 			String exactFile = filePath + pageClassName + ".java";
 			
@@ -233,8 +233,11 @@ public class CustomMethodEditor {
 			Matcher functionMatcher = functionStartPattern.matcher(pageTxt);
 			while (functionMatcher.find()) {
 				boolean isFuncAlreadyCreated = false;
-				boolean replaceFunction = false;
 				String functionExpress = functionMatcher.toMatchResult().group();
+				//find whether manualfunction
+				if(functionExpress.contains(MANUAL_FUNCTION_ATTRIBUTE)){
+					continue;
+				}
 				
 				// extract all the lines/body related to this function
 				int indexOfFuncExp = pageTxt.indexOf(functionExpress);
@@ -244,42 +247,35 @@ public class CustomMethodEditor {
 				//find parameters
 				Matcher parameterMatcher = parameterPattern.matcher(functionBody);
 				StringBuilder parameters = new StringBuilder();
+				StringBuilder methodSignatureParams = new StringBuilder();
 				while(parameterMatcher.find()){
 					if(parameters.length() > 0){
 						parameters.append(",");
+						methodSignatureParams.append(",");
 					}
 					String parameterExp = parameterMatcher.toMatchResult().group();
 					parameterExp = parameterExp.trim();
 					parameterExp = parameterExp.substring(0, parameterExp.indexOf("="));
 					parameters.append(parameterExp);
+					methodSignatureParams.append("String");
 				}
 				
 				
 				functionExpress = StringUtil.removeSpaces(functionExpress);
 				String functionName = functionExpress.substring(functionExpress.indexOf("name='") + 6,
 						functionExpress.lastIndexOf("'"));
-				replaceFunction = getReplaceValue(functionExpress);
+	/*			replaceFunction = getReplaceValue(functionExpress);*/
 				
 				StringBuilder javaMethod = new StringBuilder();
 				//GooglePO1.function1(String param1,String param2)
-				String pageFunctionSignature = pageClassName +"."+functionName+"("+parameters.toString()+ ")";
+				//(String,String)
+				String pageFunctionSignature = pageClassName +"."+functionName+"("+methodSignatureParams.toString()+ ")";
 				pageFunctionSignature = pageFunctionSignature.trim();
 				
 				javaMethod.append(" public void "+functionName+"("+parameters.toString()+ "){\n");
 				functionBody = functionBody.replaceAll(parameterPattern.pattern(), "");
 				javaMethod.append(functionBody).append("\n }");
 				
-				
-				
-				if(!replacePageObject && replaceFunction){
-					//TODO replace function
-					//\s*public\s+\w+.+\s+(login1)\(\)\s*\{(.*\s*.*)*\}[^\s]
-					
-				}
-				
-				if(!replacePageObject && !replaceFunction){
-					//TODO do not replace function
-				}
 				
 				//create functions to pageobject mapping
 				if(TestMethodsHandler.methodSignaturePerPO.containsKey(Constants.PAGE_OBJECT_PACKAGE+"."+pageClassName)){
@@ -314,11 +310,31 @@ public class CustomMethodEditor {
 	}
 	
 	//(param1,param2)
-	public String constructFunctionCall(final Matcher functionMatcher, final String functionPattern,
-			String pageObjTxt, String pageObjVariable){
+	private String constructFunctionCall(final Matcher functionMatcher, final String functionPattern,
+			String pageObjTxt, String pageObjVariable, final StringBuilder testConstruct, final Set<String> pageObjInit){
 		MatchResult result = functionMatcher.toMatchResult();
 		int indexOfFunction = result.start();
 		String functionExpress = result.group();
+		boolean isManualFunction = false;
+		String manualClassName = null;
+		//find whether manualfunction
+		if(functionExpress.contains(MANUAL_FUNCTION_ATTRIBUTE)){
+			isManualFunction = true;
+			manualClassName = functionExpress.substring(functionExpress.indexOf(MANUAL_FUNCTION_ATTRIBUTE)+MANUAL_FUNCTION_ATTRIBUTE.length(),
+					functionExpress.lastIndexOf("'"));
+			
+			String firstLetter = manualClassName.substring(0, 1);
+			pageObjVariable = manualClassName.replaceFirst(firstLetter, firstLetter.toLowerCase());
+			// GooglePO2 googlePO2 = new GooglePO2(driver,describer);
+			String objectConstruct = manualClassName + " " + pageObjVariable + "= new " + manualClassName
+					+ "(driver,describer);";
+			objectConstruct = objectConstruct.replaceAll("\\s*//\\s*", "");
+			if(!pageObjInit.contains(manualClassName)){
+				testConstruct.append("\n"+objectConstruct);
+				pageObjInit.add(manualClassName);
+			}
+		}
+		
 		
 		// extract all the lines/body related to this function
 		String endFunc = "@endFunction";
@@ -339,7 +355,13 @@ public class CustomMethodEditor {
 		}
 		
 		functionExpress = StringUtil.removeSpaces(functionExpress);
-		String functionName = functionExpress.substring(functionExpress.indexOf("name='") + 6,functionExpress.lastIndexOf("'"));
+		String functionName = null;
+		if(isManualFunction){
+			functionName = functionExpress.substring(functionExpress.indexOf("name='") + 6,functionExpress.indexOf(",")-1);
+		}else{
+			functionName = functionExpress.substring(functionExpress.indexOf("name='") + 6,functionExpress.lastIndexOf("'"));
+		}
+		
 		
 		Matcher funcEndMatcher = endOfFunctionPattern.matcher(pageObjTxt);
 		if(funcEndMatcher.find()){
@@ -347,6 +369,7 @@ public class CustomMethodEditor {
 			//googlePO2.login1(nameParam1 )
 			functionBody = functionBody.replace("@endFunction",							
 					(pageObjVariable+"."+functionName+"("+parameters+");\n"+functionAnnotate));
+			
 			
 		}
 		
@@ -357,6 +380,8 @@ public class CustomMethodEditor {
 		functionBody = functionBody.replaceAll(functionStartPattern.pattern(), "");
 		functionBody = functionBody.replaceAll(endOfFunctionPattern.pattern(), "");
 		functionBody = functionBody.replaceAll(emptyLinePattern.pattern(), "");
+		
+		System.out.println(functionBody);
 		return functionBody;
 		
 	}
@@ -493,7 +518,7 @@ public class CustomMethodEditor {
 		return matchingString;
 	}
 	
-	private boolean getReplaceValue(final String expression){
+	/*private boolean getReplaceValue(final String expression){
 		//extract replace condition
 		boolean replace = false;
 		Matcher replaceMatcher = replacePattern.matcher(expression);
@@ -504,7 +529,7 @@ public class CustomMethodEditor {
 		}
 		
 		return replace;
-	}
+	}*/
 	
 	public List<String> addFunctionsToTest(final String testClass) {
 
@@ -512,6 +537,7 @@ public class CustomMethodEditor {
 		String finalOutput = testClass;
 		finalOutput = finalOutput.replaceAll(functExpLinePattern.pattern(), "");
 		String nameConstant = "name=";
+		String manualClassConstant = "manualClass=";
 
 		int indexOfTest = 0;
 		int indexOfPage = 0;
@@ -534,9 +560,10 @@ public class CustomMethodEditor {
 				indexOfPage = pageResult.start();
 				// @pageobject(name='GooglePO1',replace=true)
 				String pageObjAnnotate = pageResult.group();
+				pageObjAnnotate = StringUtil.removeSpaces(pageObjAnnotate);
 				
 				String pageObjName = pageObjAnnotate.substring(pageObjAnnotate.indexOf(nameConstant)+nameConstant.length(),
-						pageObjAnnotate.indexOf(","));
+						pageObjAnnotate.indexOf(")"));
 				// googlePO2.login1(nameParam1 )
 				pageObjName = pageObjName.replaceAll("'", "");
 				
@@ -564,11 +591,12 @@ public class CustomMethodEditor {
 				
 				//add functions
 				Matcher functionMatcher = functionStartPattern.matcher(pageObjTxt);
-				while(functionMatcher.find()){
-					String funcBody = constructFunctionCall(functionMatcher, functionStartPattern.pattern(), pageObjTxt, pageObjVariable);
+				while(functionMatcher.find()){					
+					String funcBody = constructFunctionCall(functionMatcher, functionStartPattern.pattern(), pageObjTxt, pageObjVariable,
+							testConstruct,pageObjInit);
 					testConstruct.append("\n").append(funcBody);
 				}
-	
+
 			}
 			
 			testConstruct = new StringBuilder(testConstruct.toString().replaceAll(emptyLinePattern.pattern(), ""));

@@ -11,6 +11,7 @@ import org.test.automate.selenium.base.BaseDriverSetup;
 import org.test.automate.selenium.base.BaseDriverSetup.JUnitSelenium;
 import org.test.automate.selenium.template.CustomMethodDescriber;
 import com.thoughtworks.selenium.Selenium;
+import org.test.automate.selenium.testng.pageobject.manual.*;
 
 public class TestGoogleSuite implements Serializable {
 
@@ -80,9 +81,16 @@ public class TestGoogleSuite implements Serializable {
 		String nameParam3 = "dhanuka";
 		googlePO1.login1(nameParam1, nameParam3);
 
+		GooglePOManual googlePOManual = new GooglePOManual(driver, describer);
+
+		String nameParam6 = "dhanuka";
+		googlePOManual.loginM(nameParam6);
+
 		googlePO1.login3();
 
 		GooglePO2 googlePO2 = new GooglePO2(driver, describer);
+		String nameParam4 = "dhanuka";
+		googlePO2.login2(nameParam4);
 		String nameParam2 = "dhanuka";
 		googlePO2.login2(nameParam2);
 

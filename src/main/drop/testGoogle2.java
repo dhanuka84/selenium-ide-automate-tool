@@ -28,9 +28,9 @@ public class Test {
     
     
     
- // @pageobject(name='GooglePO1',replace=true)  
+ // @pageobject(name='GooglePO1' )  
 	  driver.get(baseUrl + "");
-    // @function(name='login1',replace=true)
+    // @function(name='login1' )
     String nameParam1 = "dhanuka";
     String nameParam3 = "dhanuka";
     
@@ -40,7 +40,7 @@ public class Test {
 
     // @endFunction(name='login1')
     
- // @function(name='login3',replace=true)
+ // @function(name='login3' )
     
     driver.findElement(By.id("lst-ib")).clear();
     driver.findElement(By.name("btnG")).click();
@@ -51,8 +51,8 @@ public class Test {
  
     driver.get(baseUrl + "");
     
- // @pageobject(name='GooglePO2',replace=true)
-    // @function(name='login2',replace=true)
+ // @pageobject(name='GooglePO2' )
+    // @function(name='login2' )
     String nameParam2 = "dhanuka";
     
     driver.findElement(By.id("lst-ib")).clear();
@@ -70,8 +70,8 @@ public class Test {
     driver.get(baseUrl + "");
     
     
- // @pageobject(name='GooglePO1',replace=true)   
-    // @function(name='login1',replace=true)
+ // @pageobject(name='GooglePO1' )   
+    // @function(name='login1' )
     String nameParam1 = "dhanuka";
     String nameParam3 = "dhanuka";
     
@@ -81,14 +81,14 @@ public class Test {
 
     // @endFunction(name='login1')
     
- // @function(name='login3',replace=true)
+ // @function(name='login3' )
     
     driver.findElement(By.id("lst-ib")).clear();
     driver.findElement(By.name("btnG")).click();
 
     // @endFunction(name='login3')
     
- // @function(name='login4',replace=true)
+ // @function(name='login4' )
     String nameParam4 = "dhanuka";
     String nameParam5 = "dhanuka";
     
@@ -98,7 +98,7 @@ public class Test {
 
     // @endFunction(name='login4')
     
- // @function(name='login1',replace=true)
+ // @function(name='login1' )
     String nameParam6 = "dhanuka";
     String nameParam7 = "dhanuka";
     
@@ -113,8 +113,8 @@ public class Test {
  
     driver.get(baseUrl + "");
     
- // @pageobject(name='GooglePO2',replace=true)
-    // @function(name='login2',replace=true)
+ // @pageobject(name='GooglePO2' )
+    // @function(name='login2' )
     String nameParam2 = "dhanuka";
     
     driver.findElement(By.id("lst-ib")).clear();

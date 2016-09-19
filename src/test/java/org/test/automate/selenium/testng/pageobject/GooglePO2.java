@@ -19,10 +19,10 @@ private static final By ELEMENT2 = By.name("btnG");
 	
 	
 
-	 public void login2(String nameParam2 ){
+	 public void login2(String nameParam4 ){
     
     describer.findElementExplicitWait( driver , ELEMENT1).clear();
-    describer.findElementExplicitWait( driver , ELEMENT1).sendKeys(nameParam2);
+    describer.findElementExplicitWait( driver , ELEMENT1).sendKeys(nameParam4);
     describer.findElementExplicitWait( driver , ELEMENT2).click();
     
  

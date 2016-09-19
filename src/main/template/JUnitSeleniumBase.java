@@ -11,6 +11,7 @@ import org.test.automate.selenium.base.BaseDriverSetup;
 import org.test.automate.selenium.base.BaseDriverSetup.JUnitSelenium;
 import org.test.automate.selenium.template.CustomMethodDescriber;
 import com.thoughtworks.selenium.Selenium;
+import org.test.automate.selenium.testng.pageobject.manual.*;
 
 
 
