@@ -9,7 +9,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class Test {
+public class TestGoogle {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -23,123 +23,19 @@ public class Test {
   }
 
   @Test
-  public void test() throws Exception {
-    
-    
-    
-    
- // @pageobject(name='GooglePO1' )  
-	  driver.get(baseUrl + "");
-    // @function(name='login1' )
-    String nameParam1 = "dhanuka";
-    String nameParam3 = "dhanuka";
-    
+  public void testGoogle() throws Exception {
+    // @pageobject(name='GooglePO1')
+    driver.get(baseUrl + "");
+    // @function(name='login1')
+    String nameParam = "dhanuka";
     driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam1);
+    driver.findElement(By.id("lst-ib")).sendKeys(nameParam);
     driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login1')
-    
- // @function(name='loginM',manualClass='GooglePOManual')
-    String nameParam6 = "dhanuka";
- // @endFunction(name='loginM')
-    
- // @function(name='login3' )
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login3')
+    // @endFunction
+    // @function(name='loginM',manualClass='GooglePOManual')
+    String manualParam = "dhanuka";
+    // @endFunction(name='loginM')
     // @endPage
-    
- 
-    driver.get(baseUrl + "");
-    
- // @pageobject(name='GooglePO2' )
-    // @function(name='login2' )
-    String nameParam4 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam4);
-    driver.findElement(By.name("btnG")).click();
-    
- 
-    // @endFunction(name='login2')
- // @endPage
-    
- // @pageobject(name='GooglePO2' )
-    // @function(name='login2' )
-    String nameParam2 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam2);
-    driver.findElement(By.name("btnG")).click();
-    
- 
-    // @endFunction(name='login2')
- // @endPage
-  }
-  
-  @Test
-  public void test2() throws Exception {
-    
-    driver.get(baseUrl + "");
-    
-    
- // @pageobject(name='GooglePO1' )   
-    // @function(name='login1' )
-    String nameParam1 = "dhanuka";
-    String nameParam3 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam1);
-    driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login1')
-    
- // @function(name='login3' )
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login3')
-    
- // @function(name='login4' )
-    String nameParam4 = "dhanuka";
-    String nameParam5 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam4);
-    driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login4')
-    
- // @function(name='login1' )
-    String nameParam6 = "dhanuka";
-    String nameParam7 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam4);
-    driver.findElement(By.name("btnG")).click();
-
-    // @endFunction(name='login1')
-    
-    // @endPage
-    
- 
-    driver.get(baseUrl + "");
-    
- // @pageobject(name='GooglePO2' )
-    // @function(name='login2' )
-    String nameParam2 = "dhanuka";
-    
-    driver.findElement(By.id("lst-ib")).clear();
-    driver.findElement(By.id("lst-ib")).sendKeys(nameParam2);
-    driver.findElement(By.name("btnG")).click();
-    
- 
-    // @endFunction(name='login2')
- // @endPage
   }
 
   @After

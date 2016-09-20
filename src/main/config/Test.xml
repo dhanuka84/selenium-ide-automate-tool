@@ -7,9 +7,10 @@
 		
 		<Parameter id="nameParam1" value="John" />
 		<Parameter id="seleniumType" value="webdriver" />
-
 		<TestCase id="testGoogle"/>
-		<TestCase id="testGoogle2"/>
+
+		<!-- <TestCase id="testGoogle1"/>
+		<TestCase id="testGoogle2"/> -->
 
 	</TestSuite>
 
